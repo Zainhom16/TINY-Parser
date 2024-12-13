@@ -183,6 +183,8 @@ Node Parser::parseSimpleExp() {
     return left_node;
 }
 
+
+
 Node Parser::parseTerm() {
     Node left_node = parseFactor();
     if (currentToken().type == "MULT" || currentToken().type == "DIV") {
@@ -272,6 +274,9 @@ std::string getTokenType(std::string& token) {
 
     return "UNKNOWN";
 }
+
+
+
 
 std::vector<Token> tokenize(std::string code) {
     error_happened = false;
