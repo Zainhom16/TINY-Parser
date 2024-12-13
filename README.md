@@ -1,9 +1,7 @@
 # TINY-Parser
 
 ## Description
-**Pareser Project** or **SyntaxTreeBuilder** is a C++ project that implements a recursive descent parser for generating syntax trees from input tokens. The project validates syntax based on a predefined grammar, builds a syntax tree using child-sibling relationships, and represents it as an adjacency list for further processing in the GUI.
-
-This project is a practical implementation of compiler design principles, focusing on lexical analysis, syntax validation, and data structure representation for syntax trees.
+This is a C++ project that implements a recursive descent parser for generating syntax trees from input tokens. The project validates syntax based on a predefined grammar, builds a syntax tree using child-sibling relationships, and represents it as an adjacency list for further processing in the GUI.
 
 ## Features
 - Recursive descent parsing for the tiny language grammar.
@@ -64,7 +62,15 @@ This project is a practical implementation of compiler design principles, focusi
  ![image](https://github.com/user-attachments/assets/efd90cb8-375f-40b2-b75f-457f14d1594f)
 
 
-
-
 ---
 
+## Team
+
+| Name     | ID               | 
+|-------------|-----------------|
+| Hazem Zainhom | 200016 | 
+| Mazen Saaed   | 2001080 | 
+| Amged Shrief   | 2000121 | 
+| Yossef Magdy    | 2001461 | 
+| AbdElrhman Ahmed   | 2001067 | 
+| Yousif Hazim   | 2001741 | 
