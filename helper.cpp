@@ -272,3 +272,114 @@ std::string getTokenType(std::string& token) {
 
     return "UNKNOWN";
 }
+
+std::vector<Token> tokenize(std::string code) {
+    error_happened = false;
+    std::vector<Token> tokens;
+    std::string currentToken;
+    bool matched = false;
+
+    for (size_t i = 0; i < code.size(); ++i) {
+        char ch = code[i];
+
+        if (isspace(ch)) {
+            if (!currentToken.empty()) {
+                std::string type = getTokenType(currentToken);
+                if(type == "UNKNOWN") {
+                    error_happened = true;
+                    return tokens;
+                }
+                if (type == "IDENTIFIER" && any_of(currentToken.begin(), currentToken.end(), ::isdigit)) {
+                    tokens.push_back({ currentToken, "Error identifier can't have numbers" });
+                }
+                else {
+                    tokens.push_back({ currentToken, type });
+                }
+                currentToken.clear();
+            }
+            continue;
+        }
+
+        if (ch == ':' && i + 1 < code.size() && code[i + 1] == '=') {
+            if (!currentToken.empty()) {
+                std::string type = getTokenType(currentToken);
+                if (type == "IDENTIFIER" && any_of(currentToken.begin(), currentToken.end(), ::isdigit)) {
+                    tokens.push_back({ currentToken, "Error identifier can't have numbers" });
+                }
+                else {
+                    tokens.push_back({ currentToken, type });
+                }
+                currentToken.clear();
+            }
+            tokens.push_back({ ":=", "ASSIGN" });
+            ++i;
+            continue;
+        }
+
+        for (const auto& pair : TOKEN_PATTERNS) {
+            const std::string& type = pair.first;
+            const std::string& pattern = pair.second;
+
+            if (pattern.size() == 1 && pattern[0] == ch) {
+                if (!currentToken.empty()) {
+                    std::string type = getTokenType(currentToken);
+                    if (type == "IDENTIFIER" && any_of(currentToken.begin(), currentToken.end(), ::isdigit)) {
+                        tokens.push_back({ currentToken, "Error identifier can't have numbers" });
+                    }
+                    else {
+                        tokens.push_back({ currentToken, type });
+                    }
+                    currentToken.clear();
+                }
+                tokens.push_back({std::string(1, ch), type });
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched) {
+            currentToken += ch;
+        }
+
+        matched = false;
+    }
+
+    if (!currentToken.empty()) {
+        std::string type = getTokenType(currentToken);
+        if (type == "IDENTIFIER" && any_of(currentToken.begin(), currentToken.end(), ::isdigit)) {
+            tokens.push_back({ currentToken, "Error identifier can't have numbers" });
+        }
+        else {
+            tokens.push_back({ currentToken, type });
+        }
+    }
+
+    return tokens;
+}
+
+std::string removeComments(std::string code) {
+    std::string result = code;
+    size_t openBrace = result.find('{');
+    size_t closeBrace = result.find('}');
+
+    while (openBrace != std::string::npos && closeBrace != std::string::npos) {
+        if (openBrace < closeBrace) {
+            result.erase(openBrace, closeBrace - openBrace + 1);
+            openBrace = result.find('{');
+            closeBrace = result.find('}');
+        } else {
+            error_happened = true;
+            return result;
+        }
+    }
+
+    if (openBrace != std::string::npos) {
+        error_happened = true;
+    }
+
+    return result;
+}
+
+void showError(QString error, QWidget *parent) {
+    QMessageBox::critical(parent, "Error", error);
+}
