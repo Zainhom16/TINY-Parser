@@ -383,3 +383,54 @@ std::string removeComments(std::string code) {
 void showError(QString error, QWidget *parent) {
     QMessageBox::critical(parent, "Error", error);
 }
+
+std::vector<Token> parseTokens(std::string &input) {
+    std::vector<Token> tokens;
+    std::istringstream stream(input);
+    std::string line;
+
+    while (std::getline(stream, line)) {
+        // Remove spaces in the line
+        line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
+
+        // Find the comma
+        size_t commaPos = line.find(',');
+
+        if (commaPos != std::string::npos) {
+            // Extract the value and type
+            std::string value = line.substr(0, commaPos);
+            std::string type = line.substr(commaPos + 1);
+
+            // Push the token into the vector
+            tokens.push_back({value, type});
+        }
+    }
+
+    return tokens;
+}
+
+
+
+Node getNodes(QString &code,QString &Stokens) {
+    try {
+        error_happened = false;
+        std::string strCode = removeComments(code.toStdString());
+        std::string strTokens = Stokens.toStdString();
+        if(error_happened) {
+            throw std::runtime_error("Invalid comment structure");
+        }
+        std::vector<Token> tokens = tokenize(strCode);
+        if(error_happened) {
+            throw std::runtime_error("Invalid token");
+        }
+        if(tokens.empty())
+            tokens = parseTokens(strTokens);
+
+        Parser parser(tokens);
+        parser.parse();
+        return parser.getRoot();
+    }
+    catch(const QString &error){
+        throw error;
+    }
+}
