@@ -1,3 +1,76 @@
+#include "mainwindow.h"
+#include "./ui_mainwindow.h"
+#include "helper.h"
+#include <QFileDialog>
+#include <QTextEdit>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QGraphicsTextItem>
+#include <QWheelEvent>
+#include <QDebug>
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::on_inputFile_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Text File"), "", tr("Text Files (*.txt);;All Files (*)"));
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            QString fileContent = in.readAll();
+
+            ui->code->setPlainText(fileContent);
+            file.close();
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("Could not open the file."));
+        }
+    }
+}
+
+void MainWindow::on_Tokenize_clicked()
+{
+    error_happened = false;
+    std::string code = ui->code->toPlainText().toStdString();
+    code = removeComments(code);
+    if(error_happened)
+    {
+        showError("invalid comment structure", this);
+        return;
+    }
+    try {
+        std::vector<Token> toks = tokenize(code);
+        if(error_happened)
+        {
+            showError("invalid token", this);
+        }
+        else
+        {
+            QString formattedTokens;
+            for (const auto &token : toks) {
+                formattedTokens += QString::fromStdString(token.value + " , " + token.type + "\n");
+            }
+
+            ui->tokens->setPlainText(formattedTokens);
+        }
+    } catch (const QString &error) {
+        showError(error, this);
+    }
+}
+
+
 void MainWindow::on_draw_clicked() {
     graph.clear();
     try{
@@ -99,4 +172,22 @@ void MainWindow::wheelEvent(QWheelEvent *event) {
         ui->tree->centerOn(event->position().toPoint());
     }
 }
+void MainWindow::on_inputTokensFromFile_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Text File"), "", tr("Text Files (*.txt);;All Files (*)"));
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            QString fileContent = in.readAll();
+
+            ui->tokens->setPlainText(fileContent);
+            file.close();
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("Could not open the file."));
+        }
+    }
+}
+
 
