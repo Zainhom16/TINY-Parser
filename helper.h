@@ -51,3 +51,54 @@ struct Token {
 };
 
 
+// class parser
+class Parser {
+private:
+    std::vector<Token> tokens;
+    size_t currentIndex;
+    Node root;
+
+    Token currentToken();
+
+    void eat(std::string expectedType);
+
+    void parseStmtSeq();
+
+    Node parseStmt();
+
+    Node parseIfStmt();
+
+    Node parseRepeatStmt();
+
+    Node parseAssignStmt();
+
+    Node parseReadStmt();
+
+    Node parseWriteStmt();
+
+    Node parseExp();
+
+    Node parseSimpleExp();
+
+    Node parseTerm();
+
+    Node parseFactor();
+
+public:
+    Parser(std::vector<Token>& t);
+    Node getRoot();
+    void parse();
+};
+
+
+
+// general functions
+std::vector<Token> parseTokens(std::string &input);
+std::string getTokenType(std::string& token);
+std::vector<Token> tokenize(std::string code);
+std::string removeComments(std::string code);
+void showError(QString error, QWidget *parent);
+Node getNodes(QString &code,QString &tokens);
+
+#endif // HELPER_H
+
