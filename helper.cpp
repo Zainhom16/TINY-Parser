@@ -41,7 +41,7 @@ void Parser::eat(std::string expectedType) {
 void Parser::parseStmtSeq() {
     Node prv = parseStmt();
     //change here
-    if (currentIndex == 0) root = prv;
+    root = prv;
     while (currentIndex < tokens.size()) {
         Node cur = parseStmt();
         graph[prv].emplace_back(cur ,0);
@@ -229,21 +229,6 @@ Node Parser::getRoot() {
 }
 
 void Parser::parse() {
-    if (currentToken().type == "READ") {
-        root = Node("read", tokens[currentIndex + 1].value, currentIndex, 1);
-    }
-    else if (currentToken().type == "WRITE") {
-        root = Node("write", "", currentIndex, 1);
-    }
-    else if (currentToken().type == "IDENTIFIER") {
-        root = Node("assign", currentToken().value, currentIndex, 1);
-    }
-    else if (currentToken().type == "REPEAT") {
-        root = Node("repeat", "", currentIndex, 1);
-    }
-    else {
-        root = Node("if", "", currentIndex, 1);
-    }
     parseStmtSeq();
 }
 
