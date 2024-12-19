@@ -40,6 +40,7 @@ void Parser::eat(std::string expectedType) {
 
 void Parser::parseStmtSeq() {
     Node prv = parseStmt();
+    //change here
     if (currentIndex == 0) root = prv;
     while (currentIndex < tokens.size()) {
         Node cur = parseStmt();
@@ -152,6 +153,7 @@ Node Parser::parseWriteStmt() {
         eat("NUMBER");
     }
     graph[write].emplace_back(child, 1);
+    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return write;
 }
 
