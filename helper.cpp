@@ -160,7 +160,7 @@ Node Parser::parseExp() {
     if (currentToken().type == "LESSTHAN" || currentToken().type == "EQUAL") {
         Node parent_node("op", currentToken().value, currentIndex, false);
         eat(currentToken().type);
-        Node right_node = parseExp();
+        Node right_node = parseSimpleExp();
         graph[parent_node].emplace_back(left_node, 1);
         graph[parent_node].emplace_back(right_node, 1);
         return parent_node;
