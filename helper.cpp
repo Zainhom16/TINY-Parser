@@ -137,26 +137,26 @@ Node Parser::parseReadStmt() {
 }
 
 Node Parser::parseWriteStmt() {
-    Node write("write", "", currentIndex, true);
-    eat("WRITE");
-    Node child("", "", -1, 0);
-    if (currentToken().type == "IDENTIFIER") {
-        child.name = "id";
-        child.value = currentToken().value;
-        child.id = currentIndex;
-        child.type = false;
-        eat("IDENTIFIER");
-    }
-    else if (currentToken().type == "NUMBER") {
-        child.name = "const";
-        child.value = currentToken().value;
-        child.id = currentIndex;
-        child.type = false;
-        eat("NUMBER");
-    }
-    graph[write].emplace_back(child, 1);
-    // if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
-    return write;
+        Node write("write", "", currentIndex, true);
+        eat("WRITE");
+        Node child = parseExp();
+        // if (currentToken().type == "IDENTIFIER") {
+        //     child.name = "id";
+        //     child.value = currentToken().value;
+        //     child.id = currentIndex;
+        //     child.type = false;
+        //     eat("IDENTIFIER");
+        // }
+        // else if (currentToken().type == "NUMBER") {
+        //     child.name = "const";
+        //     child.value = currentToken().value;
+        //     child.id = currentIndex;
+        //     child.type = false;
+        //     eat("NUMBER");
+        // }
+        graph[write].emplace_back(child, 1);
+        // if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+        return write;
 }
 
 Node Parser::parseExp() {
