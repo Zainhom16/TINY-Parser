@@ -107,6 +107,7 @@ Node Parser::parseRepeatStmt() {
     graph[repeat].emplace_back(left_child, 1);
     Node prv(left_child);
     while (currentToken().type != "UNTIL") {
+        eat("SEMICOLON");
         Node cur = parseStmt();
         graph[prv].emplace_back(cur, 0);
         prv = cur;
@@ -123,7 +124,7 @@ Node Parser::parseAssignStmt() {
     eat("ASSIGN");
     Node child = parseExp();
     graph[parent].emplace_back(child, 1);
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    // if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return parent;
 }
 
