@@ -40,11 +40,11 @@ void Parser::eat(std::string expectedType) {
 
 void Parser::parseStmtSeq() {
     Node prv = parseStmt();
-    //change here
     root = prv;
     while (currentIndex < tokens.size()) {
+        eat("SEMICOLON");
         Node cur = parseStmt();
-        graph[prv].emplace_back(cur ,0);
+        graph[prv].emplace_back(cur, 0);
         prv = cur;
     }
 }
@@ -75,6 +75,7 @@ Node Parser::parseIfStmt() {
     graph[if_node].emplace_back(right_child, 1);
     Node prv(right_child);
     while (currentToken().type != "END" && currentToken().type != "ELSE") {
+        eat("SEMICOLON");
         Node cur = parseStmt();
         graph[prv].emplace_back(cur, 0);
         prv = cur;
@@ -88,13 +89,13 @@ Node Parser::parseIfStmt() {
         graph[else_node].emplace_back(left_else_node, 1);
         Node prv_else(left_else_node);
         while (currentToken().type != "END") {
+            eat("SEMICOLON");
             Node cur = parseStmt();
             graph[prv_else].emplace_back(cur, 0);
             prv_else = cur;
         }
         graph[if_node].emplace_back(else_node, 1);
     }
-
     eat("END");
     return if_node;
 }
