@@ -132,7 +132,7 @@ Node Parser::parseReadStmt() {
     eat("READ");
     Node read("read", currentToken().value, currentIndex - 1, true);
     eat("IDENTIFIER");
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    // if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return read;
 }
 
@@ -155,7 +155,7 @@ Node Parser::parseWriteStmt() {
         eat("NUMBER");
     }
     graph[write].emplace_back(child, 1);
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    // if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return write;
 }
 
@@ -169,7 +169,7 @@ Node Parser::parseExp() {
         graph[parent_node].emplace_back(right_node, 1);
         return parent_node;
     }
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    //if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return left_node;
 }
 
@@ -183,7 +183,7 @@ Node Parser::parseSimpleExp() {
         graph[parent_node].emplace_back(right_node, 1);
         return parent_node;
     }
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    //if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return left_node;
 }
 
@@ -199,7 +199,7 @@ Node Parser::parseTerm() {
         graph[parent_node].emplace_back(right_node, 1);
         return parent_node;
     }
-    if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
+    //if (currentToken().type == "SEMICOLON") eat("SEMICOLON");
     return left_node;
 }
 
